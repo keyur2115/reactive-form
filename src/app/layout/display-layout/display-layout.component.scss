@@ -1,0 +1,22 @@
+.main {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	flex:1;
+	background: #dae9f3;
+}
+
+app-footer {
+	margin-top: auto;
+	height: 10rem;
+	background: #141E46;
+	color: white;
+}
+
+app-header {
+	height: 4rem;
+}
+
+.display-section {
+
+}

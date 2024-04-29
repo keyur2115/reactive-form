@@ -1,0 +1,14 @@
+{
+  "employees": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "email": "johndoe@example.com",
+      "dob": "1990-05-15",
+      "gender": "Male",
+      "hobbies": ["Reading", "Hiking"],
+      "education": "Bachelor's Degree in Computer Science",
+      "techStack":["javascript", "html"]
+    }
+  ]
+}

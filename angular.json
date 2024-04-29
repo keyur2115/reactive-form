@@ -30,9 +30,14 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css",
+              "node_modules/bootstrap-icons/font/bootstrap-icons.min.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -50,6 +55,12 @@
               ],
               "outputHashing": "all"
             },
+             "fileReplacements": [
+            {
+              "replace": "apps/some-app/src/environments/environment.ts",
+              "with": "apps/some-app/src/environments/environment.prod.ts"
+            }
+          ],
             "development": {
               "buildOptimizer": false,
               "optimization": false,
