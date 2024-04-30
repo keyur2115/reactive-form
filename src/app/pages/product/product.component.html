@@ -3,7 +3,7 @@
 
 	<div class="d-flex bg-light justify-content-between p-2">
 		<h5 class="m-0">Employee Data</h5>
-		<button class="btn btn-primary btn-sm">
+		<button class="btn btn-primary btn-sm" [routerLink]="'/product-form'">
 			<i class="bi bi-plus"></i>
 		</button>
 	</div>
@@ -22,8 +22,8 @@
 					<th>Email</th>
 					<th>DOB</th>
 					<th>Gender</th>
-					<!-- <th>Education</th> -->
-					<th>Tech Stack</th>
+					<th>Education</th>
+					<!-- <th>Tech Stack</th> -->
 					<th>hobbies</th>
 					<th>Action</th>
 				</tr>
@@ -32,13 +32,13 @@
 			<tbody>
 				<tr *ngFor="let employee of employeeData; let i = index;">
 					<td>{{i+1}}</td>
-					<td>{{employee.name}}</td>
+					<td><img class="img-fluid" [src]="employee.image" width="50" height="50" [alt]="employee.name"></td>
 					<td>{{employee.name}}</td>
 					<td>{{employee.email}}</td>
-					<td>{{employee.dob}}</td>
+					<td>{{employee.dob | date: 'dd/MM/yyyy'}}</td>
 					<td>{{employee.gender}}</td>
-					<!-- <td>{{employee.education}}</td> -->
-					<td ><div *ngFor="let tech of employee.techStack">{{tech}}</div></td>
+					<td><div *ngFor="let edu of employee.education">{{edu}}</div></td>
+					<!-- <td ><div *ngFor="let tech of employee.techStack">{{tech}}</div></td> -->
 					<td ><div *ngFor="let hobby of employee.hobbies">{{hobby}}</div></td>
 					<td>
 						<button class="btn btn-success btn-sm me-2" (click)="updateEmployee(employee)">

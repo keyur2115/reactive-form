@@ -1,23 +1,39 @@
 
 <div class="container">
-	<div class="row justify-content-center mt-4">
-		<div class="col-md-6 card shadow p-3">
+	<div class="mt-2"><button class="btn btn-dark btn-sm" [routerLink]="'/product'">Back</button></div>
+	<div class="row justify-content-center my-4">
+		<div class="col-md-11 col-lg-9 card p-3">
+			<h4>Employee Form</h4>
 			<form [formGroup]="employeeForm">
 				<div class="row">
 					<div class="col-md-6">
 						<label class="form-label" for="name">Name</label>
-						<input type="text" class="form-control" id="name" formControlName="name" placeholder="name"> 
+						<input type="text" class="form-control" id="name" formControlName="name" placeholder="name" [ngClass]="employeeForm.get('name')?.errors && submitted ? 'border-danger':''"> 
+						<small class="text-danger" *ngIf="employeeForm.get('name')?.errors?.['required'] && (employeeForm.get('name')?.touched || submitted)">
+							Name is required
+						</small>
 					</div>
 					<div class="col-md-6">
 						<label class="form-label" for="dob">Date Of Birth</label>
-						<input type="date" class="form-control" id="name" formControlName="dob" placeholder="Date Of Birth"> 
+						<input type="date" class="form-control" id="name" formControlName="dob" placeholder="Date Of Birth" 
+						[ngClass]="employeeForm.get('dob')?.errors && submitted ? 'border-danger':''"> 
+						<small class="text-danger" *ngIf="employeeForm.get('dob')?.invalid && (employeeForm.get('dob')?.touched || submitted)">
+							Date of Birth field is required
+						</small>
 					</div>
 				</div>
 
 				<div class="row mt-3">
 					<div class="col-md-6">
 						<label class="form-label" for="email">Email</label>
-						<input type="text" class="form-control" id="email" formControlName="email" placeholder="email"> 
+						<input type="text" class="form-control" id="email" formControlName="email" placeholder="email"
+						[ngClass]="employeeForm.get('email')?.errors && (submitted || employeeForm.get('email')?.touched) ? 'border-danger':''">
+						<small class="text-danger" *ngIf="employeeForm.get('email')?.errors && (employeeForm.get('email')?.touched || submitted) ">
+							<small *ngIf="employeeForm.get('email')?.errors?.['required']">Email field is required</small>
+							<small *ngIf="employeeForm.get('email')?.errors?.['email']">
+								Email is Invalid
+							</small> 
+						</small> 
 					</div>
 					<div class="col-md-6">
 						<div>
@@ -37,12 +53,90 @@
 				<div class="row mt-3">
 					<div class="col-md-6">
 						<label class="form-label" for="email">Hobbies</label>
-							<div *ngFor="let hobby of hobbies; let i = index;" [formArrayName]="'hobby'">
-								<input type="checkbox" class="form-check-input"  [formControl]="i"> 
-								<label>{{hobby.label}}</label>
+							<div *ngFor="let hobby of hobbies; let i = index;" [formArrayName]="'hobbies'">
+							<label>
+								<input type="checkbox" class="form-check-input" [value]="hobby.value" (change)="onChangeHobby($event, i)"> 
+								{{hobby.label}}
+							</label>
 							</div>
 					</div>
-				
+
+					<div class="col-md-6">
+						<label class="form-label" for="email">Select Technology</label>
+							
+						<select formControlName="tech" class="form-select">
+							<option selected disabled value="">Select Tech</option>
+							<option *ngFor="let tech of techOptions; let i = index;" [value]="tech.value">
+								{{tech.label}}
+							</option>
+						</select>
+					</div>
+
+					
+				</div>
+
+				<div class="row mt-3">
+					<div class="col-12 border border-secondary-subtle rounded-2 p-2">
+						<div formGroupName="address">
+							<div>
+								<label class="mb-2 border-bottom border-dark">Address</label>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<label for="street">
+									street
+										<input class="form-control" id="street" formControlName="street">
+									</label>
+								</div>
+								<div class="col-md-6">
+									<label for="city">
+									City
+										<input class="form-control" id="city" formControlName="city">
+									</label>
+								</div>
+								<div class="col-md-6">
+									<label>
+									State
+										<input class="form-control" id="state" formControlName="state">
+									</label>
+								</div>
+								<div class="col-md-6">
+									<label>
+									Zip
+										<input class="form-control" id="zip" formControlName="zip">
+									</label>
+								</div>
+
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="row mt-3">
+					<div formArrayName="education">
+						<label>Education</label>
+						<div *ngFor="let edu of education.controls; let i = index;">
+							<div class="position-relative">
+								<input class="form-control mt-1" [formControlName]="i" placeholder="Add Education">
+								<a *ngIf="education.controls.length > 1" class="delete-edu" (click)="removeEducation(i)">
+									<i class="bi bi-x-circle-fill text-danger remove-edu-icon"></i></a>
+							</div>
+						</div>
+							<button  class="btn btn-secondary btn-sm mt-1 text-end" (click)="addEducation()">Add</button>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="col-12">
+						<label>Image</label>
+						<input class="form-control" type="file" (change)="addImage($event)">
+						<img class="img-fluid" [src]="employeeImage" width="50" height="50" *ngIf="employeeImage">
+					</div>
+				</div>
+
+				<div class="mt-4 text-end">
+					<button type="submit" class="btn btn-primary" (click)="saveEmployee()" *ngIf="!employeeUpdateId">Save</button>
+					<button type="submit" class="btn btn-success" (click)="updateEmployee()" *ngIf="employeeUpdateId">Update</button>
 				</div>
 			</form>
 		</div>

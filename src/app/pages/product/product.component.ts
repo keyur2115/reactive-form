@@ -20,7 +20,7 @@ export class ProductComponent implements OnInit {
 
   // Api fuction to fetch Employee data
   getEmployee(){
-    this.apiSerive.getApi().then((res:any) => {
+    this.apiSerive.getObsApi().subscribe((res:any) => {
       if(res){
         this.employeeData = res;
       } else {
@@ -31,13 +31,23 @@ export class ProductComponent implements OnInit {
     })
   }
 
+// go to the employee form page for update with id as a query
   updateEmployee(emp:any){
-    this.router.navigate(['/product-form'])
+    this.router.navigate(['/product-form'], { queryParams: {id:emp.id}})
   }
 
 
+  // api call to delete employee 
   deleteEmployee(id:any, index:any){
-
+    this.apiSerive.deleteApi(id).subscribe((res:any) => {
+      if(res){
+        this.employeeData.splice(index, 1);
+      } else {
+        console.log("Problem in getting response")
+      }
+    }, (err) => {
+       console.log("Error in delete Api", err);
+    })
   }
 
 }
