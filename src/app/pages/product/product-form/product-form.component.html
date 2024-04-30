@@ -47,6 +47,8 @@
 							<input type="radio" class="form-check-input me-1" id="female" formControlName="gender" value="Female">
 							<label for="female">Female</label>
 						</span>
+
+						<small *ngIf="employeeForm.get('gender')?.errors && (submitted || employeeForm.get('gender')?.touched)" class="text-danger d-block">Gender is required</small>
 					</div>
 				</div>
 
@@ -83,16 +85,17 @@
 							</div>
 							<div class="row">
 								<div class="col-md-6">
-									<label for="street">
-									street
-										<input class="form-control" id="street" formControlName="street">
-									</label>
+									<label for="street">street</label>
+									<input class="form-control" id="street" formControlName="street"
+									[class.border-danger]="employeeForm.get('address.street')?.errors && (employeeForm.get('address.street')?.touched || submitted)">
+									<small class="text-danger" *ngIf="employeeForm.get('address.street')?.invalid && (employeeForm.get('address.street')?.touched || submitted)">
+										Street is required
+									</small>
 								</div>
 								<div class="col-md-6">
-									<label for="city">
-									City
-										<input class="form-control" id="city" formControlName="city">
-									</label>
+									<label for="city">City</label>
+									<input class="form-control" id="city" formControlName="city">
+									
 								</div>
 								<div class="col-md-6">
 									<label>
