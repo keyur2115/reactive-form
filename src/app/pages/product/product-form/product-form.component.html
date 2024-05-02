@@ -78,19 +78,21 @@
 				</div>
 
 				<div class="row mt-3">
-					<div class="col-12 border border-secondary-subtle rounded-2 p-2">
-						<div formGroupName="address">
+					<div class="col-12 border border-secondary-subtle rounded-2 p-2"
+					[class.border-red]="employeeForm.get('address')?.invalid && submitted">
+						<div formGroupName="address" >
 							<div>
-								<label class="mb-2 border-bottom border-dark">Address</label>
+								<label class="mb-2">Address</label>
 							</div>
 							<div class="row">
 								<div class="col-md-6">
 									<label for="street">street</label>
 									<input class="form-control" id="street" formControlName="street"
-									[class.border-danger]="employeeForm.get('address.street')?.errors && (employeeForm.get('address.street')?.touched || submitted)">
-									<small class="text-danger" *ngIf="employeeForm.get('address.street')?.invalid && (employeeForm.get('address.street')?.touched || submitted)">
+									>
+									<!-- [class.border-danger]="employeeForm.get('address.street')?.errors && (employeeForm.get('address.street')?.touched || submitted)" -->
+									<!-- <small class="text-danger" *ngIf="employeeForm.get('address.street')?.invalid && (employeeForm.get('address.street')?.touched || submitted)">
 										Street is required
-									</small>
+									</small> -->
 								</div>
 								<div class="col-md-6">
 									<label for="city">City</label>
@@ -125,20 +127,53 @@
 									<i class="bi bi-x-circle-fill text-danger remove-edu-icon"></i></a>
 							</div>
 						</div>
-							<button  class="btn btn-secondary btn-sm mt-1 text-end" (click)="addEducation()">Add</button>
+							<button  class="btn btn-info btn-sm mt-1 text-end" (click)="addEducation()">Add</button>
 					</div>
 				</div>
 
-				<div class="row">
+				<div class="row mt-3">
 					<div class="col-12">
 						<label>Image</label>
-						<input class="form-control" type="file" (change)="addImage($event)">
-						<img class="img-fluid" [src]="employeeImage" width="50" height="50" *ngIf="employeeImage">
+						<input class="form-control" type="file" (change)="addImage($event)" [class.border-danger]="submitted && !employeeForm.get('image')?.value">
+						<img class="img-fluid" [src]="employeeImage" width="50" height="50" *ngIf="employeeImage" >
+					</div>
+				</div>
+
+				<div class="row mt-3 border border-secondary-subtle p-3" formArrayName="experience">
+					<div class="col-12  mb-2 bg-light rounded-4" *ngFor="let exp of experience['controls']; let i = index" >
+						<div class="d-flex justify-content-between align-items-center  p-3">
+							<h6 class="m-0">Experience {{i+1}}</h6>
+							<button class="btn btn-danger btn-sm" (click)="removeExperience(i)">Remove Experience</button>
+						</div>
+						<div [formGroupName]="i">
+							<div class="row">
+								<div class="col-md-6 mt-2">
+									<input class="form-control" formControlName="companyName" placeholder="companyName">
+								</div>
+								<div class="col-md-6 mt-2">
+									<input class="form-control" formControlName="position" placeholder="Job Position">
+								</div>
+								<div class="col-md-6 mt-2">
+									<input type="date" class="form-control" formControlName="startDate" placeholder="Start Date">
+								</div>
+								<div class="col-md-6 mt-2">
+									<input type="date" class="form-control" formControlName="endDate" placeholder="End Date">
+								</div>
+								<div class="col-12 mt-2">
+									<input type="checkbox" (change)="onCurrentWork($event, exp)" class="form-check-input me-2" formControlName="curretlyWork" #currentWorking>
+									<label class="form-label">Currently Working</label>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-12">
+						<button class="btn btn-info"  (click)="addExperience()">Add Experience</button>
 					</div>
 				</div>
 
 				<div class="mt-4 text-end">
-					<button type="submit" class="btn btn-primary" (click)="saveEmployee()" *ngIf="!employeeUpdateId">Save</button>
+
+					<button type="submit" class="btn btn-primary w-100" (click)="saveEmployee()" *ngIf="!employeeUpdateId">Save</button>
 					<button type="submit" class="btn btn-success" (click)="updateEmployee()" *ngIf="employeeUpdateId">Update</button>
 				</div>
 			</form>

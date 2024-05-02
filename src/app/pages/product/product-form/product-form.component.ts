@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormBuilder, FormArray, Validators } from '@angular/forms';
 import { ApiService } from 'src/app/services/api.service';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -9,6 +9,7 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./product-form.component.scss']
 })
 export class ProductFormComponent implements OnInit {
+  @ViewChild('currentWorking', {static:true}) currentWorking !: ElementRef;
   employeeForm !:FormGroup;
   employeeUpdateId:any;
   submitted:boolean = false;
@@ -31,7 +32,8 @@ export class ProductFormComponent implements OnInit {
   constructor(private fb: FormBuilder, 
               private apiService: ApiService,
               private router: Router,
-              private activatedRoute: ActivatedRoute){}
+              private activatedRoute: ActivatedRoute,
+              private el: ElementRef){}
 
   ngOnInit():void {
 
@@ -51,12 +53,12 @@ export class ProductFormComponent implements OnInit {
         state:['', Validators.required], 
         zip:['', Validators.required]
       }),
-      education: this.fb.array([this.fb.control('', Validators.required)])
+      education: this.fb.array([this.fb.control('', Validators.required)]),
+      experience:this.fb.array([])
     }) // --- END ----
 
     // getting the id from queryParams
     this.employeeUpdateId = this.activatedRoute.snapshot.queryParams['id'];
-    console.log("this.employeeUpdateId", this.employeeUpdateId)
 
     if(this.employeeUpdateId){
       this.getEmployeeById();
@@ -93,10 +95,44 @@ export class ProductFormComponent implements OnInit {
     }
   } // ---- end of education form control add remove------------
 
+  //START experience form control manupulation dynamically functionality
+
+  get experience(){
+    return this.employeeForm.get('experience') as FormArray;
+  }
+
+  addExperience(){
+    let frmGroup = this.fb.group({
+      companyName: ['', Validators.required],
+      curretlyWork: [false],
+      position: [''],
+      startDate: ['', Validators.required],
+      endDate: ['']
+    });
+
+    this.experience.push(frmGroup);
+}
+
+  removeExperience(i:number){
+    this.experience.removeAt(i);
+  }
+
+  onCurrentWork(event:any, exp:any){
+    console.log("exp>>>", exp);
+    if(event.target.checked){
+      exp.controls.endDate.reset();
+      exp.controls.endDate.value = "";
+    }
+  }
+
+  // ------------------ End Experience --------------------------
+
 
  // Add Employee api call
   saveEmployee(){
     this.submitted = true;
+    console.log("employeeForm", this.employeeForm);
+    return;
     if(this.employeeForm.valid){
 
       this.apiService.addApi(this.employeeForm.value).subscribe((res:any) => {
