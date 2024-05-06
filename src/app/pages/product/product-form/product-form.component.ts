@@ -17,10 +17,10 @@ export class ProductFormComponent implements OnInit {
   checkedObj:any = {};
 
   hobbies = [
-    { label: "Reading", value: "reading", isChecked: false },
-    { label: "Hiking", value: "hiking", isChecked: false },
-    { label: "Cooking", value: "cooking", isChecked: false },
-    { label: "Gaming", value: "gaming", isChecked: false }
+    { label: "Reading", value: "reading"},
+    { label: "Hiking", value: "hiking"},
+    { label: "Cooking", value: "cooking"},
+    { label: "Gaming", value: "gaming"}
   ];
 
  techOptions = [
@@ -41,13 +41,13 @@ export class ProductFormComponent implements OnInit {
     // employeeForm START
     this.employeeForm = this.fb.group({
       id:[''],
-      name:['', ],
+      name:['', Validators.required],
       email:['', [Validators.required, Validators.email]],
       dob:['', Validators.required],
       gender:['', Validators.required],
       tech:['', Validators.required],
       image:[''],
-      hobbies:new FormArray([]),
+      hobbies:new FormArray([], Validators.required),
       address: this.fb.group({
         street:['', Validators.required],
         city:['', Validators.required],
@@ -87,13 +87,7 @@ export class ProductFormComponent implements OnInit {
       })
     }
   }
-
-  updateCheckbox(){
-    console.log("this.hobbyArray", this.employeeForm)
-    this.hobbyArray.controls.forEach((item:any) => {
-      this.checkedObj.item = true;
-    })
-  }
+  
 
 // ----START education form control dynamically add remove functinality ----------
   get education() {
@@ -101,7 +95,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   addEducation(){
-    this.education.push(new FormControl(''));
+    this.education.push(new FormControl('', Validators.required));
   }
 
   removeEducation(i:any){
@@ -110,8 +104,8 @@ export class ProductFormComponent implements OnInit {
     }
   } // ---- end of education form control add remove------------
 
-  //START experience form control manupulation dynamically functionality
 
+  //START experience form control manupulation dynamically functionality
   get experience(){
     return this.employeeForm.get('experience') as FormArray;
   }
@@ -133,7 +127,6 @@ export class ProductFormComponent implements OnInit {
   }
 
   onCurrentWork(event:any, exp:any){
-    console.log("exp>>>", exp);
     if(event.target.checked){
       exp.controls.endDate.reset();
       exp.controls.endDate.value = "";
@@ -146,6 +139,7 @@ export class ProductFormComponent implements OnInit {
  // Add Employee api call
   saveEmployee(){
     this.submitted = true;
+    console.log("employeeForm", this.hobbyArray);
     if(this.employeeForm.valid){
 
       this.apiService.addApi(this.employeeForm.value).subscribe((res:any) => {
@@ -164,9 +158,6 @@ export class ProductFormComponent implements OnInit {
   // function to get employee data based on id 
   getEmployeeById(){
     this.apiService.getApiById(this.employeeUpdateId).subscribe((res:any) => {
-      console.log("res by id", res);
-      console.log("experience ***>", this.experience);
-      this.updateCheckbox();
        
       if(res){
         this.employeeForm.patchValue({
@@ -177,7 +168,6 @@ export class ProductFormComponent implements OnInit {
           gender:res.gender,
           tech: res.tech,
           image:res.image,
-          hobbies: res.hobbies,
           address: {
             street: res.address.street,
             city:res.address.city,
@@ -196,11 +186,10 @@ export class ProductFormComponent implements OnInit {
         if(res.hobbies && res.hobbies?.length){
           res.hobbies.forEach((item:any) => {
             console.log("item", item);
-            this.checkedObj[item] = true
+            this.checkedObj[item] = true;
+            this.hobbyArray.push(new FormControl(item));
           })
         }
-
-        console.log("this.checkdObj", this.checkedObj)
 
         if(res.experience && res.experience?.length){
           res.experience.forEach((item:any, index:any) => {
@@ -216,17 +205,6 @@ export class ProductFormComponent implements OnInit {
       }
     })
   }
-
-  // populateHobbies(employeeHobbies: string[]) {
-  //   if (employeeHobbies && employeeHobbies.length > 0) {
-  //     employeeHobbies.forEach((hobby: any) => {
-  //       const index = this.hobbies.indexOf(hobby);
-  //       if (index !== -1) {
-  //         (this.employeeForm.get('hobbies') as FormArray).push(new FormControl(true));
-  //       }
-  //     });
-  //   }
-  // }
 
   updateEmployee(){
     this.submitted = true;
@@ -258,8 +236,5 @@ export class ProductFormComponent implements OnInit {
         })
     }
   }
-
-  
-
 
 }

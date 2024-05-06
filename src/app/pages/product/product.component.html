@@ -32,7 +32,7 @@
 			<tbody>
 				<tr *ngFor="let employee of employeeData; let i = index;">
 					<td>{{i+1}}</td>
-					<td><img class="img-fluid" [src]="employee.image" width="50" height="50" [alt]="employee.name"></td>
+					<td><img [src]="employee.image" width="50" height="50" [alt]="employee.name"></td>
 					<td>{{employee.name}}</td>
 					<td>{{employee.email}}</td>
 					<td>{{employee.dob | date: 'dd/MM/yyyy'}}</td>

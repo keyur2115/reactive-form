@@ -61,16 +61,19 @@
 								{{hobby.label}}
 							</label>
 							</div>
+							<small class="text-danger" *ngIf="hobbyArray.errors && (hobbyArray.touched || submitted)">At least One hobby must be selected.</small>
 					</div>
 
 					<div class="col-md-6">
 						<label class="form-label" for="email">Select Technology</label>
 							
-						<select formControlName="tech" class="form-select">
+						<select formControlName="tech" class="form-select" 
+						[class.border-danger]="employeeForm.get('tech')?.errors && (employeeForm.get('tech')?.touched || submitted)">
 							<option selected disabled value="">Select Tech</option>
 							<option *ngFor="let tech of techOptions; let i = index;" [value]="tech.value">
 								{{tech.label}}
 							</option>
+
 						</select>
 					</div>
 
@@ -122,7 +125,7 @@
 						<label>Education</label>
 						<div *ngFor="let edu of education.controls; let i = index;">
 							<div class="position-relative">
-								<input class="form-control mt-1" [formControlName]="i" placeholder="Add Education">
+								<input class="form-control mt-1" [formControlName]="i" placeholder="Add Education" [class.border-danger]="edu.errors && (submitted || edu.touched)">
 								<a *ngIf="education.controls.length > 1" class="delete-edu" (click)="removeEducation(i)">
 									<i class="bi bi-x-circle-fill text-danger remove-edu-icon"></i></a>
 							</div>
