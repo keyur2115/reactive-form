@@ -103,16 +103,14 @@
 									
 								</div>
 								<div class="col-md-6">
-									<label>
-									State
-										<input class="form-control" id="state" formControlName="state">
-									</label>
+									<label>State</label>
+									<input class="form-control" id="state" formControlName="state">
+									
 								</div>
 								<div class="col-md-6">
-									<label>
-									Zip
-										<input class="form-control" id="zip" formControlName="zip">
-									</label>
+									<label>Zip</label>
+									<input class="form-control" id="zip" formControlName="zip">
+									
 								</div>
 
 							</div>
@@ -138,7 +136,7 @@
 					<div class="col-12">
 						<label>Image</label>
 						<input class="form-control" type="file" (change)="addImage($event)" [class.border-danger]="submitted && !employeeForm.get('image')?.value">
-						<img class="img-fluid" [src]="employeeImage" width="50" height="50" *ngIf="employeeImage" >
+						<img class="img-fluid" [src]="employeeForm.get('image')?.value" width="50" height="50" *ngIf="employeeForm.get('image')?.value" >
 					</div>
 				</div>
 

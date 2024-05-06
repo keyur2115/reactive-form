@@ -139,7 +139,6 @@ export class ProductFormComponent implements OnInit {
  // Add Employee api call
   saveEmployee(){
     this.submitted = true;
-    console.log("employeeForm", this.hobbyArray);
     if(this.employeeForm.valid){
 
       this.apiService.addApi(this.employeeForm.value).subscribe((res:any) => {
@@ -185,7 +184,6 @@ export class ProductFormComponent implements OnInit {
 
         if(res.hobbies && res.hobbies?.length){
           res.hobbies.forEach((item:any) => {
-            console.log("item", item);
             this.checkedObj[item] = true;
             this.hobbyArray.push(new FormControl(item));
           })
@@ -211,7 +209,6 @@ export class ProductFormComponent implements OnInit {
     if(this.employeeForm.valid){
       this.apiService.updateApi(this.employeeUpdateId, this.employeeForm.value).subscribe((res:any) => {
          if(res){
-          console.log("update res", res);
           this.router.navigate(['/product']);
          }
       })
@@ -220,6 +217,7 @@ export class ProductFormComponent implements OnInit {
 
   // image file add base64
   addImage(event:any){
+    console.log("event", event);
     let file:any;
     if(event.target.files && event.target.files[0]){
       file = event.target.files[0];
@@ -229,8 +227,6 @@ export class ProductFormComponent implements OnInit {
     reader.readAsDataURL(file);
 
     reader.onload = () => {
-      console.log("reader111", reader);
-      this.employeeImage = reader.result;
         this.employeeForm.patchValue({
            image: reader.result
         })
