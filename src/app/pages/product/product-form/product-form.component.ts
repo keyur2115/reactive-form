@@ -14,12 +14,13 @@ export class ProductFormComponent implements OnInit {
   employeeUpdateId:any;
   submitted:boolean = false;
   employeeImage:any = null;
+  checkedObj:any = {};
 
   hobbies = [
-    { label: "Reading", value: "reading" },
-    { label: "Hiking", value: "hiking" },
-    { label: "Cooking", value: "cooking" },
-    { label: "Gaming", value: "gaming" }
+    { label: "Reading", value: "reading", isChecked: false },
+    { label: "Hiking", value: "hiking", isChecked: false },
+    { label: "Cooking", value: "cooking", isChecked: false },
+    { label: "Gaming", value: "gaming", isChecked: false }
   ];
 
  techOptions = [
@@ -40,7 +41,7 @@ export class ProductFormComponent implements OnInit {
     // employeeForm START
     this.employeeForm = this.fb.group({
       id:[''],
-      name:['', Validators.required],
+      name:['', ],
       email:['', [Validators.required, Validators.email]],
       dob:['', Validators.required],
       gender:['', Validators.required],
@@ -66,18 +67,32 @@ export class ProductFormComponent implements OnInit {
   }
 
  // --- add hobby value from checkbox functionality
-  onChangeHobby(event:any, index:any){
+  get hobbyArray(){
+    return this.employeeForm.get('hobbies') as FormArray;
+  }
+  
+
+  onChangeHobby(event:any, item:any){
     let hobbyArray = this.employeeForm.get('hobbies') as FormArray;
 
     if(event.target.checked){
       hobbyArray.push(new FormControl(event.target.value))
     } else {
+      let index = 0;
       hobbyArray.controls.forEach((ctrl:any) => {
         if(ctrl.value == event.target.value){
           hobbyArray.removeAt(index)
         }
+        index++;
       })
     }
+  }
+
+  updateCheckbox(){
+    console.log("this.hobbyArray", this.employeeForm)
+    this.hobbyArray.controls.forEach((item:any) => {
+      this.checkedObj.item = true;
+    })
   }
 
 // ----START education form control dynamically add remove functinality ----------
@@ -131,8 +146,6 @@ export class ProductFormComponent implements OnInit {
  // Add Employee api call
   saveEmployee(){
     this.submitted = true;
-    console.log("employeeForm", this.employeeForm);
-    return;
     if(this.employeeForm.valid){
 
       this.apiService.addApi(this.employeeForm.value).subscribe((res:any) => {
@@ -151,6 +164,10 @@ export class ProductFormComponent implements OnInit {
   // function to get employee data based on id 
   getEmployeeById(){
     this.apiService.getApiById(this.employeeUpdateId).subscribe((res:any) => {
+      console.log("res by id", res);
+      console.log("experience ***>", this.experience);
+      this.updateCheckbox();
+       
       if(res){
         this.employeeForm.patchValue({
           id: res.id,
@@ -160,14 +177,13 @@ export class ProductFormComponent implements OnInit {
           gender:res.gender,
           tech: res.tech,
           image:res.image,
-          // hobbies: res.hobbies,
+          hobbies: res.hobbies,
           address: {
             street: res.address.street,
             city:res.address.city,
             state:res.address.state, 
             zip:res.address.zip
           },
-          // education: res.education
         })
 
         if(res.education && res.education?.length){
@@ -177,7 +193,26 @@ export class ProductFormComponent implements OnInit {
           })
         }
 
-          // this.populateHobbies(res.hobbies);
+        if(res.hobbies && res.hobbies?.length){
+          res.hobbies.forEach((item:any) => {
+            console.log("item", item);
+            this.checkedObj[item] = true
+          })
+        }
+
+        console.log("this.checkdObj", this.checkedObj)
+
+        if(res.experience && res.experience?.length){
+          res.experience.forEach((item:any, index:any) => {
+            this.experience.push(this.fb.group({
+              companyName:[item.companyName, Validators.required],
+              position: [item.position, ],
+              startDate: [item.startDate, ],
+              endDate: [item.endDate],
+              curretlyWork:[item.curretlyWork]
+            }))
+          })
+        }
       }
     })
   }
@@ -198,6 +233,7 @@ export class ProductFormComponent implements OnInit {
     if(this.employeeForm.valid){
       this.apiService.updateApi(this.employeeUpdateId, this.employeeForm.value).subscribe((res:any) => {
          if(res){
+          console.log("update res", res);
           this.router.navigate(['/product']);
          }
       })
@@ -220,9 +256,10 @@ export class ProductFormComponent implements OnInit {
         this.employeeForm.patchValue({
            image: reader.result
         })
-    console.log("empl form>>>", this.employeeForm.value);
     }
   }
+
+  
 
 
 }

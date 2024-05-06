@@ -57,7 +57,7 @@
 						<label class="form-label" for="email">Hobbies</label>
 							<div *ngFor="let hobby of hobbies; let i = index;" [formArrayName]="'hobbies'">
 							<label>
-								<input type="checkbox" class="form-check-input" [value]="hobby.value" (change)="onChangeHobby($event, i)"> 
+								<input type="checkbox" class="form-check-input" [value]="hobby.value" (change)="onChangeHobby($event, hobby)" [checked]="checkedObj[hobby.value]"> 
 								{{hobby.label}}
 							</label>
 							</div>
